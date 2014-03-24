@@ -88,13 +88,15 @@
         /*
          * Converts ESRI REST to GeoJSON feature Feature.
          * Input parameter is an ESRI Rest Feature object
+         * Optional parameter of String idField to have a property assigned to feature.id
          */
-        function esriFeatureToGcFeature(esriFeature) {
+        function esriFeatureToGcFeature(esriFeature, idField) {
             var gcFeat = null,
                 prop,
                 gcProps,
                 i,
                 p;
+            idField = (typeof idField === "undefined") ? false : idField;
             if (esriFeature) {
                 gcFeat = {
                     type: "Feature"
@@ -107,6 +109,9 @@
                     p = esriFeature.attributes;
                     for (prop in esriFeature.attributes) {
                         gcProps[prop] = esriFeature.attributes[prop];
+                        if (prop === idField) {
+                            gcFeat.id = esriFeature.attributes[prop];
+                        }
                     }
                     gcFeat.properties = gcProps;
                 }
@@ -115,9 +120,13 @@
         }
 
         /*Converts ESRI Rest Featureset, Feature, or Geometry
-          to GeoJSON FeatureCollection, Feature, or Geometry */
-        esriCon.toGeoJson = function(esriObject) {
+          to GeoJSON FeatureCollection, Feature, or Geometry
+          
+          Optional parameter of String idField to have a property assigned to feature.id
+        */
+        esriCon.toGeoJson = function(esriObject, idField) {
             var outObj, i, esriFeats, gcFeat;
+            idField = (typeof idField === "undefined") ? false : idField;
             if (esriObject){
                 if (esriObject.features){
                     outObj = {
@@ -126,7 +135,7 @@
                     };
                     esriFeats = esriObject.features;
                     for (i = 0; i < esriFeats.length; i++) {
-                        gcFeat = esriFeatureToGcFeature(esriFeats[i]);
+                        gcFeat = esriFeatureToGcFeature(esriFeats[i], idField);
                         if (gcFeat) {
                             outObj.features.push(gcFeat);
                         }
