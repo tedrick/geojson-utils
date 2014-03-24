@@ -86,7 +86,7 @@
         }
 
         /*
-         * Converts GeoJSON feature to ESRI REST Feature.
+         * Converts ESRI REST to GeoJSON feature Feature.
          * Input parameter is an ESRI Rest Feature object
          */
         function esriFeatureToGcFeature(esriFeature) {
